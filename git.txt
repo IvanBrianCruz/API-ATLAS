@@ -1,0 +1,5 @@
+trabajar primero hay que hacer git pull origin main para descargar todos los cambios
+MANDAR A PRODUCCION ....................................    npm run deploy
+una vez que ya terminaste de trabajar haces :...........    git add .
+despues:................................................    git commit -m "  "
+y al ultimo  y ya se sube todo:.........................    git push origin master
