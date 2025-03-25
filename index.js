@@ -13,7 +13,8 @@ const corsOptions = {
       'http://localhost:3000',  // Frontend local
       'http://localhost:5173',  // Otro puerto común para desarrollo
       'https://tudominio.com',  // Dominio de producción
-      'https://www.tudominio.com' // Variante con www
+      'https://www.tudominio.com', // Variante con www
+      "https://api-atlas-production.up.railway.app/"
     ];
 
     // Permitir solicitudes sin origen (como desde Postman o curl)
