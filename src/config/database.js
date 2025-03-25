@@ -7,9 +7,11 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT, // Puerto
-    dialect: process.env.DB_DIALECT || 'mysql', // 👈 Asegura que el dialecto está definido
-    logging: false
+    port: process.env.DB_PORT,
+    dialect: process.env.DB_DIALECT || 'mysql',
+    logging: false,
+    logging: console.log, // Esto mostrará las consultas SQL en la consola
+  
   }
 );
 

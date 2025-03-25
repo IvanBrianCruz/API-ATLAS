@@ -1,14 +1,27 @@
-const Product = require('../models/Product');
+const sequelize = require('../config/database'); // Importar sequelize desde la configuración
+const Product = require('../models/Product')(sequelize); // Pasar sequelize al modelo
 const { cloudinary } = require('../config/cloudinary');
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.findAll();
-  res.json(products);
+  try {
+    const products = await Product.findAll();
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener productos' });
+  }
 };
 
 exports.getProductById = async (req, res) => {
-  const product = await Product.findByPk(req.params.id);
-  product ? res.json(product) : res.status(404).json({ error: 'Producto no encontrado' });
+  try {
+    const product = await Product.findByPk(req.params.id);
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ error: 'Producto no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener producto' });
+  }
 };
 
 exports.createProduct = async (req, res) => {
