@@ -14,7 +14,8 @@ const corsOptions = {
       'http://localhost:5173',  // Otro puerto común para desarrollo
       'https://tudominio.com',  // Dominio de producción
       'https://www.tudominio.com', // Variante con www
-      "https://api-atlas-production.up.railway.app/"
+      'https://api-atlas-production.up.railway.app/',
+      'https://api-atlas-ivans-projects-ece2b759.vercel.app/'
     ];
 
     // Permitir solicitudes sin origen (como desde Postman o curl)
