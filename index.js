@@ -12,10 +12,14 @@ const corsOptions = {
     const dominiosPermitidos = [
       'http://localhost:3000',  // Frontend local
       'http://localhost:5173',  // Otro puerto común para desarrollo
+      'http://localhost:5173',
       'https://tudominio.com',  // Dominio de producción
       'https://www.tudominio.com', // Variante con www
       'https://api-atlas-production.up.railway.app/',
-      'https://api-atlas-ivans-projects-ece2b759.vercel.app/'
+      'https://api-atlas-ivans-projects-ece2b759.vercel.app/',
+      'https://ivanbriancruz.github.io/CURSO_PSEINT/'
+
+
     ];
 
     // Permitir solicitudes sin origen (como desde Postman o curl)
@@ -70,7 +74,7 @@ async function iniciarServidor() {
 
     await sequelize.sync(opciones);
     console.log('Conexión a la base de datos establecida');
-    
+
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en puerto ${PORT}`);
