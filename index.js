@@ -17,7 +17,9 @@ const corsOptions = {
       'https://www.tudominio.com', // Variante con www
       'https://api-atlas-production.up.railway.app/',
       'https://api-atlas-ivans-projects-ece2b759.vercel.app/',
-      'https://ivanbriancruz.github.io/CURSO_PSEINT/'
+      'https://ivanbriancruz.github.io/CURSO_PSEINT/',
+      'https://ivanbriancruz.github.io'
+
 
 
     ];
