@@ -4,8 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "postinstall": "npm install --force"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
