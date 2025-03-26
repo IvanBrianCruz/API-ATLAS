@@ -5,46 +5,19 @@ const productoRoutes = require('./routes/productoRoutes');
 
 const app = express();
 
-// Configuración de CORS
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Lista de dominios permitidos
-    const dominiosPermitidos = [
-      'http://localhost:3000',  // Frontend local
-      'http://localhost:5173',  // Otro puerto común para desarrollo
-      'http://localhost:5173',
-      'https://tudominio.com',  // Dominio de producción
-      'https://www.tudominio.com', // Variante con www
-      'https://api-atlas-production.up.railway.app/',
-      'https://api-atlas-ivans-projects-ece2b759.vercel.app/',
-      'https://ivanbriancruz.github.io/CURSO_PSEINT/',
-      'https://ivanbriancruz.github.io'
-
-
-
-    ];
-
-    // Permitir solicitudes sin origen (como desde Postman o curl)
-    if (!origin || dominiosPermitidos.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('No permitido por CORS'));
-    }
-  },
+// Configuración de CORS abierta para pruebas
+app.use(cors({
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  optionsSuccessStatus: 200
-};
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-// Middleware
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Middleware de registro de solicitudes (para depuración)
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origen: ${req.headers.origin}`);
   next();
 });
 
@@ -70,8 +43,8 @@ async function iniciarServidor() {
   try {
     // Configuración para producción
     const opciones = {
-      alter: process.env.NODE_ENV !== 'production', // Solo alter en desarrollo
-      logging: process.env.NODE_ENV !== 'production' // Solo logs en desarrollo
+      alter: process.env.NODE_ENV !== 'production',
+      logging: process.env.NODE_ENV !== 'production'
     };
 
     await sequelize.sync(opciones);
