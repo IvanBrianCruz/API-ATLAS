@@ -7,10 +7,11 @@ const app = express();
 
 // Configuración de CORS abierta para pruebas
 app.use(cors({
-  origin: '*',
+  origin: ['https://ivanbriancruz.github.io/CURSO_PSEINT/', 'https://ivanbriancruz.github.io/'], // Sustituye con tu URL de producción
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
