@@ -1,4 +1,8 @@
 const { Sequelize } = require('sequelize');
+const mysql2 = require('mysql2'); // Asegura que mysql2 se carga
+
+
+
 require('dotenv').config();
 
 console.log('Configuración de base de datos:', {
