@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');  // Importar helmet
 const sequelize = require('./config/database');
 const productoRoutes = require('./routes/productoRoutes');
 
 const app = express();
+
+// Usar helmet para proteger las cabeceras HTTP
+app.use(helmet());  // Aplica helmet globalmente para proteger todas las rutas
 
 // Configuración de CORS abierta para pruebas
 app.use(cors({
@@ -11,7 +15,6 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

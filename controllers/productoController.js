@@ -3,26 +3,41 @@ const Producto = require('../models/producto');
 class ProductoController {
   // Crear nuevo producto
   async crearProducto(req, res) {
+    const t = await sequelize.transaction();
     try {
-      const nuevoProducto = await Producto.create(req.body);
+      const nuevoProducto = await Producto.create(req.body, { transaction: t });
+      await t.commit();
       res.status(201).json(nuevoProducto);
     } catch (error) {
-      res.status(400).json({ 
-        mensaje: 'Error al crear el producto', 
-        error: error.message 
+      await t.rollback();
+      res.status(400).json({
+        mensaje: 'Error al crear el producto',
+        error: error.message
       });
     }
   }
 
-  // Obtener todos los productos
   async obtenerProductos(req, res) {
     try {
-      const productos = await Producto.findAll();
-      res.json(productos);
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const offset = (page - 1) * limit;
+  
+      const { count, rows: productos } = await Producto.findAndCountAll({
+        limit,
+        offset
+      });
+  
+      res.json({
+        totalProductos: count,
+        paginaActual: page,
+        totalPaginas: Math.ceil(count / limit),
+        productos
+      });
     } catch (error) {
-      res.status(500).json({ 
-        mensaje: 'Error al obtener productos', 
-        error: error.message 
+      res.status(500).json({
+        mensaje: 'Error al obtener productos',
+        error: error.message
       });
     }
   }

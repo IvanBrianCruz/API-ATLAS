@@ -8,7 +8,14 @@ const Producto = sequelize.define('Producto', {
     autoIncrement: true
   },
   name: {
-    type: DataTypes.STRING(100),
+    type: DataTypes.STRING(240),
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
+  },
+  category: {
+    type: DataTypes.STRING(240),
     allowNull: false,
     validate: {
       notEmpty: true

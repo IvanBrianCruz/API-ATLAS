@@ -5,11 +5,7 @@ const mysql2 = require('mysql2'); // Asegura que mysql2 se carga
 
 require('dotenv').config();
 
-console.log('Configuración de base de datos:', {
-  database: process.env.DB_NAME,
-  username: process.env.DB_USER,
-  host: process.env.DB_HOST
-});
+
 
 const sequelize = new Sequelize(
   process.env.DB_NAME, 
