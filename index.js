@@ -1,34 +1,37 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');  // Importar helmet
+const helmet = require('helmet');
 const sequelize = require('./config/database');
 const productoRoutes = require('./routes/productoRoutes');
+const authRoutes = require('./routes/authRoutes'); // Nueva importación
 
 const app = express();
 
-// Usar helmet para proteger las cabeceras HTTP
-app.use(helmet());  // Aplica helmet globalmente para proteger todas las rutas
+// Middleware de seguridad
+app.use(helmet());
 
-// Configuración de CORS abierta para pruebas
+// Configuración de CORS
 app.use(cors({
-  origin: ['https://ivanbriancruz.github.io/CURSO_PSEINT', 'https://ivanbriancruz.github.io'], // Sustituye con tu URL de producción
+  origin: ['https://ivanbriancruz.github.io/CURSO_PSEINT', 'https://ivanbriancruz.github.io'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware de registro de solicitudes (para depuración)
+// Middleware de registro
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - Origen: ${req.headers.origin}`);
   next();
 });
 
 // Rutas
+app.use('/api/auth', authRoutes); // Nueva ruta de autenticación
 app.use('/api/productos', productoRoutes);
 
-// Middleware de manejo de errores global
+// Middleware de errores global
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -42,18 +45,16 @@ app.use((req, res) => {
   res.status(404).json({ mensaje: 'Ruta no encontrada' });
 });
 
-// Conexión a la base de datos y inicio del servidor
+// Conexión a la base de datos e inicio del servidor
 async function iniciarServidor() {
   try {
-    // Configuración para producción
     const opciones = {
       alter: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production'
     };
-
     await sequelize.sync(opciones);
     console.log('Conexión a la base de datos establecida');
-
+    
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en puerto ${PORT}`);
