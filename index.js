@@ -12,7 +12,7 @@ app.use(helmet());
 
 // Configuración de CORS
 app.use(cors({
-  origin: ['https://ivanbriancruz.github.io/CURSO_PSEINT', 'https://ivanbriancruz.github.io'],
+  origin: ['https://ivanbriancruz.github.io/CURSO_PSEINT', 'https://ivanbriancruz.github.io', 'http://localhost:5173', 'https://frontend-ten-lemon-21.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
