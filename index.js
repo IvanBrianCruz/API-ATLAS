@@ -1,3 +1,5 @@
+require('pg'); // Forzar que Vercel la incluya en el bundle
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
