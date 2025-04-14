@@ -1,7 +1,6 @@
-// models/usuario.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const bcrypt = require('bcrypt'); // Necesitarás instalar: npm install bcrypt
+const bcrypt = require('bcrypt');
 
 const Usuario = sequelize.define('Usuario', {
   id: {
@@ -26,8 +25,11 @@ const Usuario = sequelize.define('Usuario', {
     allowNull: false
   },
   role: {
-    type: DataTypes.ENUM('admin', 'user'),
-    defaultValue: 'user'
+    type: DataTypes.STRING,
+    defaultValue: 'user',
+    validate: {
+      isIn: [['admin', 'user']]
+    }
   },
   activo: {
     type: DataTypes.BOOLEAN,
@@ -37,7 +39,6 @@ const Usuario = sequelize.define('Usuario', {
   timestamps: true,
   tableName: 'usuarios',
   hooks: {
-    // Hash de la contraseña antes de guardar
     beforeCreate: async (usuario) => {
       if (usuario.password) {
         const salt = await bcrypt.genSalt(10);
@@ -45,7 +46,6 @@ const Usuario = sequelize.define('Usuario', {
       }
     },
     beforeUpdate: async (usuario) => {
-      // Solo hashear si la contraseña ha cambiado
       if (usuario.changed('password')) {
         const salt = await bcrypt.genSalt(10);
         usuario.password = await bcrypt.hash(usuario.password, salt);
@@ -54,8 +54,7 @@ const Usuario = sequelize.define('Usuario', {
   }
 });
 
-// Método para verificar contraseña
-Usuario.prototype.verificarPassword = async function(password) {
+Usuario.prototype.verificarPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
