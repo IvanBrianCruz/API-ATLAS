@@ -2,6 +2,8 @@
 const jwt = require('jsonwebtoken'); // Necesitarás instalar: npm install jsonwebtoken
 const Usuario = require('../models/usuario');
 const { validationResult } = require('express-validator');
+const nodemailer = require('nodemailer');
+
 
 class AuthController {
   // Registro de nuevo usuario
@@ -51,8 +53,67 @@ class AuthController {
       console.error(error);
       res.status(500).json({ mensaje: 'Error al registrar usuario', error: error.message });
     }
+
+    // Enviar correo de verificación (opcional)
+
+    // Crear token de activación
+const activationToken = jwt.sign(
+  { id: usuario.id },
+  process.env.JWT_SECRET,
+  { expiresIn: '1d' }
+);
+
+// Crear link de activación
+const activationLink = `https://api-atlas.vercel.app/api/auth/activar/${activationToken}`;
+
+// Configurar transporte (usá Gmail o SMTP de tu hosting)
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Enviar correo
+await transporter.sendMail({
+  from: '" IES N6 " <atlas@ies.com>',
+  to: usuario.email,
+  subject: 'Activa tu cuenta',
+  html: `
+    <h2>Bienvenido ${usuario.nombre}</h2>
+    <p>Gracias por registrarte. Hacé clic en el siguiente botón para activar tu cuenta:</p>
+    <a href="${activationLink}" style="padding: 10px 15px; background-color: #7494ec; color: #fff; text-decoration: none;">Activar cuenta</a>
+    <p>O copia este enlace: ${activationLink}</p>
+  `
+});
+
   }
 
+  // Activar cuenta de usuario
+  async activarCuenta(req, res) {
+    try {
+      const { token } = req.params;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  
+      const usuario = await Usuario.findByPk(decoded.id);
+      if (!usuario) {
+        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+  
+      if (usuario.activo) {
+        return res.status(400).json({ mensaje: 'La cuenta ya está activada' });
+      }
+  
+      usuario.activo = true;
+      await usuario.save();
+  
+      return res.send('<h2>Cuenta activada correctamente</h2><p>Ahora podés iniciar sesión.</p>');
+    } catch (error) {
+      return res.status(400).send('<h2>Token inválido o expirado</h2>');
+    }
+  }
+  
   // Login de usuario existente
   async login(req, res) {
     // Verificar errores de validación

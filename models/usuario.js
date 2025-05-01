@@ -33,7 +33,7 @@ const Usuario = sequelize.define('Usuario', {
   },
   activo: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true
+    defaultValue: false
   }
 }, {
   timestamps: true,

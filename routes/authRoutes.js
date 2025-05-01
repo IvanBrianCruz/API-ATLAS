@@ -11,5 +11,6 @@ router.post('/login', validarLogin, authController.login);
 
 // Ruta protegida - verificar token
 router.get('/verify', authMiddleware, authController.verifyToken);
+router.get('/activar/:token', authController.activarCuenta);
 
 module.exports = router;
