@@ -56,7 +56,7 @@ class AuthController {
         subject: 'Activa tu cuenta',
         html: `
            <div style="max-width:600px;margin:0 auto;padding:20px;font-family:sans-serif;border:1px solid #ccc;border-radius:8px;background:#f9f9f9">
-    <img src="https://github.com/IvanBrianCruz/FRONTEND/blob/master/src/assets/img/2.png?raw=true" alt="Banner IES" style="width:100%;border-radius:8px 8px 0 0">
+    <img src="https://lh3.googleusercontent.com/pw/AP1GczOCQaoqE_drXkBv-KGrk8-21GVinx1ZpAvGAYn3_okRnxhp8gWJKgOigiP99sCH9Y08_kUWQOG8XjdUSTTyipMpqjXBV_Ul4Fr6InHNBtsRMedv9fRDi2YW5PQAabea0Be_CnANEcriOykDX4EvvoOBnA=w1200-h480-s-no-gm" alt="Banner IES" style="width:100%;border-radius:8px 8px 0 0">
     <h3 >¡Hola!👏 Nos alegra saludarte</h3>
     <h2 style="color:#444;">¡Bienvenido/a ${usuario.nombre}!</h2>
     <p>Gracias por registrarte en la plataforma del <strong>Instituto de Educación Superior N°6</strong>.</p>
@@ -72,7 +72,7 @@ class AuthController {
     <p>Saludos</p>
     
 <p>Equipo de Atlas</p>
-    <img src="https://github.com/IvanBrianCruz/FRONTEND/blob/master/src/assets/img/3.png?raw=true" alt="Banner Inferior" style="width:100%;margin-top:20px;border-radius:0 0 8px 8px">
+    <img src="https://lh3.googleusercontent.com/pw/AP1GczPn6OQ6KHshQHxy4uDvlLPvu3VozND1k8SLc0Pl51eOPU2sp1nPhNiBOjen7sTmnW25Qs0h2DxIMoDf6V0mWk0er3u1011pBBbeXKdIuhA1qeISCIcrLfDPSXt5myCzjzzX9dO6CI9RHGc27_UIJbaTcg=w1200-h198-s-no-gm" alt="Banner Inferior" style="width:100%;margin-top:20px;border-radius:0 0 8px 8px">
     <p style="text-align:center;font-size:12px;color:#999;">Instituto de Educación Superior N°6 - Jujuy, Argentina</p>
     
 
