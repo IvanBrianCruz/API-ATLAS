@@ -4,6 +4,20 @@ const Usuario = require('../models/usuario');
 const { validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 
+// Configuro el transporter **una sola vez**
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+
+
+// Controlador de autenticación
+// Este controlador maneja el registro, activación de cuenta y login de usuarios
+
 
 class AuthController {
   // Registro de nuevo usuario
@@ -203,6 +217,7 @@ class AuthController {
 
 
   // renviar correo de activación
+  // renviar correo de activación
   async reenviarActivacion(req, res) {
     try {
       const { email } = req.body;
@@ -211,17 +226,12 @@ class AuthController {
       if (!usuario) {
         return res.status(404).json({ mensaje: 'Usuario no encontrado' });
       }
-
       if (usuario.activo) {
         return res.status(400).json({ mensaje: 'La cuenta ya está activada' });
       }
 
-      const activationToken = jwt.sign(
-        { id: usuario.id },
-        process.env.JWT_SECRET,
-        { expiresIn: '1d' }
-      );
-
+      // Genero nuevo token y link
+      const activationToken = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
       const activationLink = `https://api-atlas.vercel.app/api/auth/activar/${activationToken}`;
 
       await transporter.sendMail({
@@ -256,6 +266,7 @@ class AuthController {
 
       return res.json({ mensaje: 'Correo reenviado correctamente' });
     } catch (error) {
+      console.error(error);
       return res.status(500).json({ mensaje: 'Error al reenviar correo' });
     }
   }
