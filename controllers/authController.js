@@ -105,21 +105,22 @@ class AuthController {
 
       const usuario = await Usuario.findByPk(decoded.id);
       if (!usuario) {
-        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+        return res.redirect('https://frontend-ten-lemon-21.vercel.app/UsuarioNoEncontrado'); // usuario no existe
       }
 
       if (usuario.activo) {
-        return res.status(400).json({ mensaje: 'La cuenta ya está activada' });
+        return res.redirect('https://frontend-ten-lemon-21.vercel.app/CuentaYaActivada'); // ya estaba activada
       }
 
       usuario.activo = true;
       await usuario.save();
 
-      return res.send('<h2>Cuenta activada correctamente</h2><p>Ahora podés iniciar sesión.</p>');
+      return res.redirect('https://frontend-ten-lemon-21.vercel.app/ActivacionExitosa'); // cuenta activada correctamente
     } catch (error) {
-      return res.status(400).send('<h2>Token inválido o expirado</h2>');
+      return res.redirect('https://frontend-ten-lemon-21.vercel.app/TokenInvalido'); // token inválido o expirado
     }
   }
+
 
   // Login de usuario existente
   async login(req, res) {
@@ -196,6 +197,69 @@ class AuthController {
       res.status(500).json({ mensaje: 'Error al verificar token', error: error.message });
     }
   }
+
+
+
+
+
+  // renviar correo de activación
+  async reenviarActivacion(req, res) {
+    try {
+      const { email } = req.body;
+      const usuario = await Usuario.findOne({ where: { email } });
+
+      if (!usuario) {
+        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+
+      if (usuario.activo) {
+        return res.status(400).json({ mensaje: 'La cuenta ya está activada' });
+      }
+
+      const activationToken = jwt.sign(
+        { id: usuario.id },
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+      );
+
+      const activationLink = `https://api-atlas.vercel.app/api/auth/activar/${activationToken}`;
+
+      await transporter.sendMail({
+        from: '"IES N°6" <atlas@ies.com>',
+        to: usuario.email,
+        subject: 'Reenvío - Activá tu cuenta',
+        html: `
+           <div style="max-width:600px;margin:0 auto;padding:20px;font-family:sans-serif;border:1px solid #ccc;border-radius:8px;background:#f9f9f9">
+    <img src="https://lh3.googleusercontent.com/pw/AP1GczOCQaoqE_drXkBv-KGrk8-21GVinx1ZpAvGAYn3_okRnxhp8gWJKgOigiP99sCH9Y08_kUWQOG8XjdUSTTyipMpqjXBV_Ul4Fr6InHNBtsRMedv9fRDi2YW5PQAabea0Be_CnANEcriOykDX4EvvoOBnA=w1200-h480-s-no-gm" alt="Banner IES" style="width:100%;border-radius:8px 8px 0 0">
+    <h3 >¡Hola!👏 Nos alegra saludarte</h3>
+    <h2 style="color:#444;">¡Bienvenido/a ${usuario.nombre}!</h2>
+    <p>Gracias por registrarte en la plataforma del <strong>Instituto de Educación Superior N°6</strong>.</p>
+    <p>Para activar tu cuenta y comenzar a disfrutar de los servicios disponibles, hacé clic en el siguiente botón:</p>
+    <a href="${activationLink}" style="display:inline-block;margin-top:10px;padding:12px 24px;background:#7494ec;color:#fff;text-decoration:none;border-radius:6px;font-weight:bold;">Activar cuenta</a>
+    <p style="margin-top:15px;">Si el botón no funciona, copiá y pegá este enlace en tu navegador:</p>
+    <p style="word-break:break-all;">${activationLink}</p>
+    <hr />
+    <p style="font-size:14px;">Accedé a constancias, turnos, planes de estudio, novedades institucionales y mucho más desde nuestra plataforma.</p>
+    <br>
+    <p>¡Seguimos mejorando para que tu experiencia sea la mejor de todas! 😘​🙌​
+    </p>
+    <p>Saludos</p>
+    
+<p>Equipo de Atlas</p>
+    <img src="https://lh3.googleusercontent.com/pw/AP1GczPn6OQ6KHshQHxy4uDvlLPvu3VozND1k8SLc0Pl51eOPU2sp1nPhNiBOjen7sTmnW25Qs0h2DxIMoDf6V0mWk0er3u1011pBBbeXKdIuhA1qeISCIcrLfDPSXt5myCzjzzX9dO6CI9RHGc27_UIJbaTcg=w1200-h198-s-no-gm" alt="Banner Inferior" style="width:100%;margin-top:20px;border-radius:0 0 8px 8px">
+    <p style="text-align:center;font-size:12px;color:#999;">Instituto de Educación Superior N°6 - Jujuy, Argentina</p>
+    
+
+  </div>
+        `
+      });
+
+      return res.json({ mensaje: 'Correo reenviado correctamente' });
+    } catch (error) {
+      return res.status(500).json({ mensaje: 'Error al reenviar correo' });
+    }
+  }
+
 }
 
 module.exports = new AuthController();
